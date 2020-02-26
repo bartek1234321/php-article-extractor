@@ -1,5 +1,5 @@
 {
-    "name": "bartek1234321/php-article-extractor",
+    "name": "crscheid/php-article-extractor",
     "description": "An HTML article extractor for PHP",
     "keywords": [
         "parse",
