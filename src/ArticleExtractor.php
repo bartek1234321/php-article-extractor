@@ -157,7 +157,21 @@ class ArticleExtractor
 		$readability = new Readability(new Configuration(['SummonCthulhu' => true]));
 
 		try {
-			$html = file_get_contents($url);
+            $context = stream_context_create([
+                'http' => [
+                    'header' => [
+                        'User-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.132 Safari/537.36'
+                    ]
+                ]
+            ]);
+			$html = file_get_contents($url, false, $context);
+
+//            $ch = curl_init();
+//            curl_setopt($ch, CURLOPT_URL, $url);
+//            curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.132 Safari/537.36');
+//            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+//            $html = curl_exec($ch);
+
 			$readability->parse($html);
 			$title = $readability->getTitle();
 			$text  = $readability->getContent();
