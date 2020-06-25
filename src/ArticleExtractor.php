@@ -179,8 +179,9 @@ class ArticleExtractor
 
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $url);
-            curl_setopt($ch, CURLOPT_USERAGENT,
-                'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.132 Safari/537.36');
+            if (!empty($this->user_agent)) {
+                curl_setopt($ch, CURLOPT_USERAGENT, $this->user_agent);
+            }
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             $html = curl_exec($ch);
 
