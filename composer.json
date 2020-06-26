@@ -1,32 +1,32 @@
 {
-    "name": "bartek1234321/php-article-extractor",
-    "description": "An HTML article extractor for PHP",
-    "keywords": [
-        "parse",
-        "HTML",
-        "extract"
-    ],
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Christopher Scheidel",
-            "email": "christopher.scheidel@gmail.com"
-        }
-    ],
-    "require": {
-        "php": ">=7.2",
-        "ext-curl": "*",
-        "scotteh/php-goose": "^1.0",
-        "thesoftwarefanatics/php-html-parser": "^1.8.0",
-        "detectlanguage/detectlanguage": "2.*",
-        "andreskrey/readability.php": "^2.1.0"
-    },
-    "require-dev": {
-        "phpunit/phpunit": "^8.0"
-    },
-    "autoload": {
-        "psr-4": {
-            "Cscheide\\ArticleExtractor\\": "src"
-        }
+  "name": "bartek1234321/php-article-extractor",
+  "description": "An HTML article extractor for PHP",
+  "keywords": [
+    "parse",
+    "HTML",
+    "extract"
+  ],
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Christopher Scheidel",
+      "email": "christopher.scheidel@gmail.com"
     }
+  ],
+  "require": {
+    "php": ">=7.2",
+    "ext-curl": "*",
+    "scotteh/php-goose": "^1.0",
+    "thesoftwarefanatics/php-html-parser": "^1.8.0",
+    "detectlanguage/detectlanguage": "2.*",
+    "andreskrey/readability.php": "^2.1.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^8.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Cscheide\\ArticleExtractor\\": "src"
+    }
+  }
 }

@@ -1,5 +1,24 @@
 # ChangeLog
 
+## Version 2.1
+
+- Added handling of common Google referral URLs
+- Added 'result_url' to the return structure to inform the caller what the resultant URL was after redirects
+
+
+## Version 2.0.1
+
+- Turned off debugging left on by mistake
+
+## Version 2.0
+
+- Added ability to manually set User-Agent, fixing many readability issues
+- Updated redirect detection logic to more accurately read HTTP headers.
+- Updated dependencies
+  - Updated PHPUnit to ^8.0
+  - Updated andreskrey/readability.php to ^2.1.0
+- Updated PHP dependency to ^7.2
+
 ## Version 1.0.1
 
 - Fixed minor issue with `parse_url` check.

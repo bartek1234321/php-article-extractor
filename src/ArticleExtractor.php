@@ -28,10 +28,10 @@ class ArticleExtractor
     private $space_elements = ['p', 'li'];
 
     // API key for the remote detection service
-    private $api_key = null;
+    private $api_key;
 
     // User agent to override
-    private $user_agent = null;
+    private $user_agent;
 
     public function __construct($api_key = null, $user_agent = null)
     {
@@ -70,6 +70,7 @@ class ArticleExtractor
      */
     public function processURL($url)
     {
+
         // Check for redirects first
         $url = $this->checkForRedirects($url);
 
@@ -144,7 +145,6 @@ class ArticleExtractor
         unset($results['html']); // remove raw HTML before returning it
 
         return $results;
-
     }
 
     /**
@@ -160,7 +160,6 @@ class ArticleExtractor
      */
     private function parseViaReadability($url)
     {
-
         $text   = null;
         $title  = null;
         $method = "readability";
@@ -232,7 +231,6 @@ class ArticleExtractor
      */
     private function parseViaGooseOrCustom($url)
     {
-
         $text   = null;
         $method = "goose";
         $title  = null;
@@ -366,7 +364,6 @@ class ArticleExtractor
         }
 
         return ['parse_method' => $method, 'title' => $title, 'text' => $text, 'html' => $html];
-
     }
 
     private function checkGoogleReferralUrl($url)
@@ -410,12 +407,16 @@ class ArticleExtractor
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_HEADER, true);
-        curl_setopt($ch, CURLOPT_NOBODY, true);
+        curl_setopt($ch, CURLOPT_NOBODY, true);                        // exclude the body from the request, we only want the header here
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, false);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        // NOTE: We don't set user-agent here because many of the redirect services will use meta refresh instead of location headers to redirect.
+
         $a = curl_exec($ch);
 
         $new_url = $this->findLocationHeader($a);
+
         if ($new_url != null) {
             $this->log_debug("Redirect found to: " . $new_url);
 
@@ -449,13 +450,10 @@ class ArticleExtractor
      */
     private function findLocationHeader($text)
     {
-
         $lines = explode("\n", $text);
 
         foreach ($lines as $line) {
-
             $header_item = explode(":", $line);
-
             if (mb_strtolower($header_item[0]) == "location") {
                 $url = trim(mb_substr($line, mb_strpos($line, ":") + 1));
                 return $url;
@@ -470,7 +468,6 @@ class ArticleExtractor
      */
     private function shiftEncodingToUTF8($text)
     {
-
         if ($encoding = mb_detect_encoding($text, mb_detect_order(), true)) {
             $this->log_debug("shiftEncodingToUTF8 detected encoding of " . $encoding . " -> shifting to UTF-8");
             return iconv($encoding, "UTF-8", $text);
@@ -482,11 +479,9 @@ class ArticleExtractor
 
     private function peerAnalysis($element)
     {
-
         $this->log_debug("PEER ANALYSIS ON " . $element->tag->name() . " (" . $element->getAttribute('class') . ")");
 
-        $range = 0.50;
-
+        $range              = 0.50;
         $element_wc         = str_word_count($element->text(true));
         $element_whitecount = substr_count($element->text(true), ' ');
         $element_wc_ratio   = $element_whitecount / $element_wc;
@@ -530,19 +525,15 @@ class ArticleExtractor
 
     private function buildAllNodeList($element, $depth = 0)
     {
-
         $return_array = [];
-
         // Debug what we are checking
 
         if ($element->getTag()->name() != "text") {
-
             $this->log_debug("buildAllNodeList: " . str_repeat(' ',
                     $depth * 2) . $element->getTag()->name() . " ( " . $element->getAttribute('class') . " )");
 
             // Look at each child div element
             if ($element->hasChildren()) {
-
                 foreach ($element->getChildren() as $child) {
                     // Push the children's children
                     $return_array = array_merge($return_array, array_values($this->buildAllNodeList($child, $depth + 1)));
@@ -573,9 +564,7 @@ class ArticleExtractor
      */
     private function getTextForNode($element)
     {
-
         $text = '';
-
         $this->log_debug("getTextForNode: " . $element->getTag()->name());
 
         // Look at each child
@@ -638,7 +627,6 @@ class ArticleExtractor
      */
     private function checkHTMLForLanguageHint($html_string)
     {
-
         try {
             // Ok then try it a different way
             $dom = new Dom;
@@ -653,7 +641,6 @@ class ArticleExtractor
                 return substr($lang, 0, 2);
             } // Otherwise...
             else {
-
                 // Check to see if we have a <meta name="content-language" content="ja" /> type tag
                 $metatags = $dom->find("meta");
 
@@ -671,7 +658,6 @@ class ArticleExtractor
             $this->log_debug("checkHTMLForLanguageHint: Returning false as exception occurred: " . $e->getMessage());
             return false;
         }
-
     }
 
     /**
